@@ -16,12 +16,14 @@
       align-items: center;
       height: 100vh;
       text-align: center;
+      flex-direction: column;
     }
 
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
+      margin-top: 50px; /* Push container down a bit */
     }
 
     img {
@@ -36,13 +38,36 @@
       text-transform: uppercase;
       margin: 0;
       line-height: 1.4;
+      margin-bottom: 30px;
+    }
+
+    button.contact-btn {
+      padding: 1rem 2.5rem;
+      font-size: 1.2rem;
+      background-color: #ff5500;
+      border: none;
+      border-radius: 25px; /* Rounded corners */
+      color: #0d0d0d;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: background-color 0.3s ease;
+      margin-top: 80px; /* Space above the button to push it down */
+    }
+
+    button.contact-btn:hover {
+      background-color: #cc4400;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="logo.gif" alt="Burning Art Horizons Logo">
+    <img src="logo.gif" alt="Burning Art Horizons Logo" />
     <h1>BURNING ART<br>HORIZONS</h1>
+    <button class="contact-btn"
+      onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=sharing&ouid=109117356295642571596', '_blank')">
+      Contact
+    </button>
   </div>
 </body>
 </html>
