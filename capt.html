@@ -15,8 +15,9 @@
       text-align: center;
     }
 
-    .captcha-container {
-      text-align: center;
+    #capjs {
+      display: flex;
+      justify-content: center;
       margin-bottom: 2rem;
     }
 
@@ -26,7 +27,7 @@
       width: 100%;
       max-width: 640px;
       margin: 0 auto;
-      padding-bottom: 160%; /* Adjust height ratio */
+      padding-bottom: 160%; /* Adjust based on form height */
       height: 0;
       overflow: hidden;
     }
@@ -40,29 +41,36 @@
       border: none;
     }
   </style>
+  <script src="https://unpkg.com/@nabeta/capjs@1.0.2/dist/index.min.js"></script>
 </head>
 <body>
 
   <h1>BURNING ART HORIZONS</h1>
-  <p>Contact Form – Please complete CAPTCHA to proceed</p>
+  <p>Contact Form – Complete CAPTCHA to continue</p>
 
-  <div class="captcha-container">
-    <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY" data-callback="showForm"></div>
-  </div>
+  <!-- CapJS CAPTCHA -->
+  <div id="capjs"></div>
 
+  <!-- Hidden Google Form iframe -->
   <div id="formWrapper" class="form-container">
-  src="https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=header"
-    <iframe 
-    src="https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=header">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=header">
       Loading…
     </iframe>
   </div>
 
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>
-    function showForm() {
-      document.getElementById('formWrapper').style.display = 'block';
-    }
+    // Initialize CapJS CAPTCHA
+    const captcha = new CapJS({
+      el: '#capjs',
+      onSuccess: () => {
+        // Show the form once CAPTCHA is passed
+        document.getElementById('formWrapper').style.display = 'block';
+        // Optionally remove the CAPTCHA
+        document.getElementById('capjs').style.display = 'none';
+      },
+    });
+
+    captcha.init();
   </script>
 
 </body>
