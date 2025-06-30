@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Burning Art Horizons</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Burning Art Horizons - Secure Contact</title>
   <style>
     body {
       margin: 0;
@@ -14,24 +14,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       text-align: center;
       flex-direction: column;
     }
-
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 50px; /* Push container down a bit */
+      margin-top: 50px;
     }
-
     img {
       max-width: 200px;
       height: auto;
       margin-bottom: 20px;
     }
-
     h1 {
       font-size: 2.5rem;
       letter-spacing: 2px;
@@ -40,34 +37,169 @@
       line-height: 1.4;
       margin-bottom: 30px;
     }
-
-    button.contact-btn {
-      padding: 1rem 2.5rem;
-      font-size: 1.2rem;
-      background-color: #ff5500;
+    /* CAPTCHA canvas */
+    canvas {
+      border: 2px solid red;
+      margin: 10px;
+      box-shadow: 5px 5px 5px gray;
+      cursor: pointer;
+      user-select: none;
+      background-color: #d3d3d3; /* light grey background */
+    }
+    input#captchaInput {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+      width: 160px;
+      text-align: center;
+      border-radius: 5px;
+      border: 1px solid #ff5500;
+      background-color: #1a1a1a;
+      color: #ff5500;
+    }
+    button#submitBtn {
+      padding: 10px 20px;
+      background-color: brown;
+      color: aqua;
       border: none;
-      border-radius: 25px; /* Rounded corners */
-      color: #0d0d0d;
+      border-radius: 25px;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 1.5px;
+      box-shadow: 5px 5px 5px gray;
+      user-select: none;
+      margin-bottom: 20px;
       transition: background-color 0.3s ease;
-      margin-top: 80px; /* Space above the button to push it down */
     }
-
-    button.contact-btn:hover {
+    button#submitBtn:hover {
       background-color: #cc4400;
+    }
+    #result {
+      font-weight: bold;
+      min-height: 1.2em;
+      margin-bottom: 20px;
+    }
+    /* Contact link initially hidden */
+    a.contact-btn {
+      display: none;
+      padding: 1rem 2.5rem;
+      font-size: 1.2rem;
+      background-color: #ff5500;
+      border-radius: 25px;
+      color: #0d0d0d;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      user-select: none;
+      box-shadow: 5px 5px 5px gray;
+      transition: background-color 0.3s ease;
+    }
+    a.contact-btn:hover,
+    a.contact-btn:focus {
+      background-color: #cc4400;
+      outline: none;
+    }
+    a.contact-btn:focus-visible {
+      outline: 3px solid #cc4400;
+      outline-offset: 2px;
+    }
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      a.contact-btn {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+      }
     }
   </style>
 </head>
-<body>
+<body onload="generateCaptcha()">
+
   <div class="container">
     <img src="logo.gif" alt="Burning Art Horizons Logo" />
     <h1>BURNING ART<br>HORIZONS</h1>
-    <button class="contact-btn"
-      onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=sharing&ouid=109117356295642571596', '_blank')">
-      Contact
-    </button>
+
+    <canvas id="captchaCanvas" width="150" height="50" title="Click to refresh CAPTCHA"></canvas>
+    <input id="captchaInput" type="text" placeholder="Enter CAPTCHA" autocomplete="off" />
+    <button id="submitBtn" onclick="validateCaptcha()">Contact</button>
+    <div id="result"></div>
+
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLScjd19mdgZneEZ-6hgyB4COZ2DyDraR3zqbe5j1cPPlDXhMlQ/viewform?usp=sharing&ouid=109117356295642571596"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="contact-btn"
+       id="contactLink">
+      Email
+    </a>
   </div>
+
+  <script>
+    let generatedCaptcha = "";
+
+    function generateCaptcha() {
+      const canvas = document.getElementById("captchaCanvas");
+      const ctx = canvas.getContext("2d");
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      generatedCaptcha = "";
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#d3d3d3"; // Light grey background
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < 5; i++) {
+        const char = chars.charAt(Math.floor(Math.random() * chars.length));
+        generatedCaptcha += char;
+
+        ctx.font = `${Math.floor(Math.random() * 10 + 25)}px Arial`;
+        ctx.fillStyle = `rgb(${Math.floor(Math.random() * 150)}, ${Math.floor(Math.random() * 150)}, ${Math.floor(Math.random() * 150)})`;
+        ctx.save();
+        ctx.translate(25 + i * 25, 35);
+        ctx.rotate((Math.random() - 0.5) * 0.5);
+        ctx.fillText(char, 0, 0);
+        ctx.restore();
+      }
+
+      // Noise lines
+      for (let i = 0; i < 5; i++) {
+        ctx.strokeStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.5)`;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+      }
+
+      // Noise dots
+      for (let i = 0; i < 30; i++) {
+        ctx.fillStyle = `rgba(0, 0, 0, ${Math.random()})`;
+        ctx.beginPath();
+        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 1.5, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
+      // Reset input and messages
+      document.getElementById("captchaInput").value = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("contactLink").style.display = "none"; // Hide link again on refresh
+    }
+
+    // Refresh CAPTCHA on canvas click
+    document.getElementById("captchaCanvas").addEventListener("click", generateCaptcha);
+
+    function validateCaptcha() {
+      const input = document.getElementById("captchaInput").value.trim();
+
+      if (input.toLowerCase() === generatedCaptcha.toLowerCase()) {
+        document.getElementById("result").textContent = "✅";
+        document.getElementById("result").style.color = "limegreen";
+        document.getElementById("contactLink").style.display = "inline-block";
+      } else {
+        document.getElementById("result").textContent = "❌ CAPTCHA Not Matched. Try again.";
+        document.getElementById("result").style.color = "red";
+        document.getElementById("contactLink").style.display = "none";
+        generateCaptcha();
+      }
+    }
+  </script>
 </body>
 </html>
